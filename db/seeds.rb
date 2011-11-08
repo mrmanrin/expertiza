@@ -318,12 +318,25 @@ end
 Role.rebuild_cache
 
 
-#####################
-## Create some other seed data if it is development or test environment.
+#########################################################################################################
+## Non-essential seed data that only gets added if in development or testing environment.
+
 if RAILS_ENV == 'development' or RAILS_ENV == 'testing'
   ###########################################################################
   # Creating Class Environment
   ###########################################################################
+  
+  ############################################################################
+  #Two University or institution NCSU and Test will be inserted into the table
+  #for testing purposes.
+  ############################################################################
+  Institution.create!(:name => "North Carolina State University")
+  Institution.create!(:name => "Test state university")
+  
+  ###########################################################################
+  # Languages
+  ###########################################################################
+  Language.create!(:name => "English")
   
   ###########################################################################
   # Users
@@ -394,9 +407,11 @@ if RAILS_ENV == 'development' or RAILS_ENV == 'testing'
                :is_new_user => false,
                :master_permission_granted => false)
   
-  ###########################################################################
-  # Course, TA_mapping
-  ##########################################################################
+  ################################################################
+  #The course inserted below is the course that will be used
+  # for setting up the class environment for testing. The instructor
+  # for the class will be instructor1
+  ################################################################
   #Create CSC517 test course with ./CSC517_instructor1 directory path
   tu = Course.create!(:name => 'CSC517', :instructor_id => User.find_by_name('instructor1').id,
                       :directory_path => 'CSC517_instructor1', :info => 'Test CSC517 class Object Oriented Programming')
@@ -410,7 +425,6 @@ if RAILS_ENV == 'development' or RAILS_ENV == 'testing'
   ###########################################################################
   # Questions and Questionnaires
   ##########################################################################
-  #Questionnaires types
   Questionnaire.create!(:name => 'ReviewQuestionnaire',:instructor_id => User.find_by_name('instructor1').id,
                         :min_question_score => 1,:max_question_score => 5,
                         :type => 'ReviewQuestionnaire', :display_type => 'Review')
@@ -475,33 +489,46 @@ if RAILS_ENV == 'development' or RAILS_ENV == 'testing'
   QuestionAdvice.create!(:question_id => 6 , :score => 4 , :advice => 'Team member mostly completed his/her work on time')
   QuestionAdvice.create!(:question_id => 6 , :score => 5 , :advice => 'Team member always completed his/her work on time')
   
-  ##########################################################################
-  # Assignments
-  ##########################################################################
-  tu = Assignment.create!(:name => 'Assignment1',:directory_path => 'CSC517_instructor1/Assignment1',:submitter_count => 0,
-                          :course_id => Course.find_by_name('CSC517').id, :instructor_id => User.find_by_name('instructor1').id,
+  ################################################################
+  # The 3 assignment inserted below are linked to course_object_oriented
+  # course to form a class environment for testing with instructor1 as
+  # the instructor
+  ################################################################
+  tu = Assignment.create!(:name => 'Assignment1',
+                          :directory_path => 'CSC517_instructor1/Assignment1',
+                          :submitter_count => 0,
+                          :course_id => Course.find_by_name('CSC517').id, 
+                          :instructor_id => User.find_by_name('instructor1').id,
                           :review_questionnaire_id =>  Questionnaire.find_by_name('ReviewQuestionnaire').id,
                           :review_of_review_questionnaire_id => Questionnaire.find_by_name('MetareviewQuestionnaire').id,
                           :teammate_review_questionnaire_id => Questionnaire.find_by_name('TeammateReviewQuestionnaire').id,
-                          :team_assignment => 1, :require_signup => 0,
+                          :team_assignment => 1, 
+                          :require_signup => 0,
                           :author_feedback_questionnaire_id => Questionnaire.find_by_name('AuthorFeedbackQuestionnaire').id,
                           :team_count => 2)
   tu.create_node()
   tu.save!
   
-  tu = Assignment.create!(:name => 'Assignment2',:directory_path => 'CSC517_instructor1/Assignment2',:submitter_count => 0,
-                          :course_id => Course.find_by_name('CSC517').id, :instructor_id => User.find_by_name('instructor1').id,
+  tu = Assignment.create!(:name => 'Assignment2',
+                          :directory_path => 'CSC517_instructor1/Assignment2',
+                          :submitter_count => 0,
+                          :course_id => Course.find_by_name('CSC517').id, 
+                          :instructor_id => User.find_by_name('instructor1').id,
                           :review_questionnaire_id =>  Questionnaire.find_by_name('ReviewQuestionnaire').id,
                           :review_of_review_questionnaire_id => Questionnaire.find_by_name('MetareviewQuestionnaire').id,
                           :teammate_review_questionnaire_id => Questionnaire.find_by_name('TeammateReviewQuestionnaire').id,
-                          :team_assignment => 1, :require_signup => 0,
+                          :team_assignment => 1, 
+                          :require_signup => 0,
                           :author_feedback_questionnaire_id => Questionnaire.find_by_name('AuthorFeedbackQuestionnaire').id,
                           :team_count => 2)
   tu.create_node()
   tu.save!
   
-  tu = Assignment.create!(:name => 'Assignment3',:directory_path => 'CSC517_instructor1/Assignment3',:submitter_count => 0,
-                          :course_id => Course.find_by_name('CSC517').id, :instructor_id => User.find_by_name('instructor1').id,
+  tu = Assignment.create!(:name => 'Assignment3',
+                          :directory_path => 'CSC517_instructor1/Assignment3',
+                          :submitter_count => 0,
+                          :course_id => Course.find_by_name('CSC517').id, 
+                          :instructor_id => User.find_by_name('instructor1').id,
                           :review_questionnaire_id =>  Questionnaire.find_by_name('ReviewQuestionnaire').id,
                           :review_of_review_questionnaire_id => Questionnaire.find_by_name('MetareviewQuestionnaire').id,
                           :teammate_review_questionnaire_id => Questionnaire.find_by_name('TeammateReviewQuestionnaire').id,
@@ -514,7 +541,11 @@ if RAILS_ENV == 'development' or RAILS_ENV == 'testing'
   ###########################################################################
   # Teams
   ##########################################################################
-  #Create Invitation and accept them)
+
+  ############################################################################
+  #Two default accepted invitations will be created for the course_object_oriented
+  #course and the three assignment associated with it.
+  ############################################################################  
   Invitation.create!(:assignment_id => Assignment.find_by_name('Assignment1').id,
                      :from_id => User.find_by_name('student1'), :to_id => User.find_by_name('student2').id,
                      :reply_status => 'A')
@@ -523,7 +554,7 @@ if RAILS_ENV == 'development' or RAILS_ENV == 'testing'
                      :from_id => User.find_by_name('student3'), :to_id => User.find_by_name('student1').id,
                      :reply_status => 'A')
   
-  #Create Teams
+  #4 Teams for class environment example
   Team.create!(:name => 'Assignment1Team1', :parent_id => Assignment.find_by_name('Assignment1').id)
   Team.create!(:name => 'Assignment1Team2', :parent_id => Assignment.find_by_name('Assignment1').id)
   Team.create!(:name => 'Assignment2Team1', :parent_id => Assignment.find_by_name('Assignment2').id)
@@ -535,11 +566,11 @@ if RAILS_ENV == 'development' or RAILS_ENV == 'testing'
   # of the Team entries is manually getting its type set.
   Node.all.each do |n|
     n.type = "AssignmentTeam"
-    n.save
+    n.save!
   end #-- probably have to put the node item here.
   
   
-  #Assign Users to Team
+  #Mapping three different students to four different teams
   TeamsUser.create!(:team_id => Team.find_by_name('Assignment1Team1').id, :user_id => User.find_by_name('student1').id)
   TeamsUser.create!(:team_id => Team.find_by_name('Assignment1Team1').id, :user_id => User.find_by_name('student2').id)
   TeamsUser.create!(:team_id => Team.find_by_name('Assignment1Team2').id, :user_id => User.find_by_name('student3').id)
@@ -575,5 +606,21 @@ if RAILS_ENV == 'development' or RAILS_ENV == 'testing'
                        :is_waitlisted => 0)
   SignedUpUser.create!(:topic_id => 3, :creator_id => User.find_by_name('student3').id,
                        :is_waitlisted => 0)
-    
+  
+  ################################################################################
+  # Survey Deployment for course evaluation.
+  ################################################################################
+  tsd = SurveyDeployment.create!(:course_evaluation_id => Questionnaire.find_by_name('CourseEvaluationQuestionnaire').id,
+                                 :start_date => (DateTime.now.to_time + 1.day).to_datetime.to_formatted_s(:db),
+                                 :end_date => (DateTime.now.to_time + 8.days).to_datetime.to_formatted_s(:db),
+                                 :num_of_students => User.find_all_by_role_id(Role.student.id).length,
+                                 :last_reminder => (DateTime.now.to_time + 6.days).to_datetime.to_formatted_s(:db))
+  
+  ################################################################################
+  # Assign all students to the survey deployment.
+  ################################################################################
+  User.find_all_by_role_id(Role.student.id).each do |user|
+    SurveyParticipant.create!(:user_id => user.id, :survey_deployment_id => tsd.id)
+  end
+  
 end
